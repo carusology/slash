@@ -1,0 +1,36 @@
+version: 2.1
+
+orbs:
+  codecov: codecov/codecov@1.0.4
+
+jobs:
+  dotnet:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - packages-{{ checksum "src/Slash/Slash.csproj" }}-{{ checksum "test/Slash.Test/Slash.Test.csproj" }}
+            - packages
+      - run:
+          name: Build
+          command: dotnet build
+      - run:
+          name: Test
+          command:
+            dotnet test ./test/Slash.Test/Slash.Test.csproj /p:CollectCoverage="true"
+              /p:CoverletOutputFormat="opencover"
+              /p:CoverletOutput="../../coverage/coverage.opencover.xml"
+      - codecov/upload:
+          file: coverage/coverage.opencover.xml
+      - save_cache:
+          paths:
+            - ~/.dotnet
+          key: packages-{{ checksum "src/Slash/Slash.csproj" }}-{{ checksum "test/Slash.Test/Slash.Test.csproj" }}
+
+workflows:
+  version: 2
+  pipeline:
+    jobs:
+      - dotnet
