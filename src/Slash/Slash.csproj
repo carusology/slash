@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Invio.Immutable" Version="0.4.2" />
+  </ItemGroup>
+
 </Project>
