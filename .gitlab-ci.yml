@@ -1,0 +1,44 @@
+stages:
+  - Build
+  - Test
+
+.dotnet:
+  image: mcr.microsoft.com/dotnet/core/sdk:3.1
+  tags:
+    - scaled
+
+Build Service:
+  extends: .dotnet
+  stage: Build
+  script:
+    - dotnet restore --packages .dotnet/packages
+    - dotnet build --packages .dotnet/packages --no-restore
+  artifacts:
+    paths:
+      - ./src/Slash/bin
+      - ./src/Slash/obj
+      - ./test/Slash.Test/bin
+      - ./test/Slash.Test/obj
+
+Test Service:
+  extends: .dotnet
+  stage: Test
+  script:
+    - dotnet test ./test/Slash.Test/Slash.Test.csproj
+        /p:CollectCoverage="true"
+        /p:CoverletOutput="../../coverage/coverage.json"
+  coverage: '/Slash\s+\|\s+([0-9.]+)%\s+/'
+  dependencies:
+    - Build Service
+  artifacts:
+    paths:
+      - ./coverage
+  cache:
+    policy: pull
+
+# This is a global cache of dotnet artifacts we can use between pipelines to speed up jobs.
+# Removing this cache should result in slower, but ultimately identical, behavior.
+# To clear: Go to GitLab GUI and select "CI / CD" > "Pipelines" > Click the "Clear Runner Caches" button
+cache:
+    paths:
+      - .dotnet/packages/
