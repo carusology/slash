@@ -19,6 +19,42 @@ namespace Slash.Services.GitLab {
             pingResultGenerator = new PingResultGenerator();
         }
 
+        [Fact]
+        public void Constructor_NullHttpClient_ThrowsArgumentNullException() {
+
+            // Arrange
+
+            var configuration = Options.Create(new GitLabConfiguration());
+
+            // Act
+
+            var exception = Record.Exception(
+                () => new GitLabService(null, configuration)
+            );
+
+            // Assert
+
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+
+        [Fact]
+        public void Constructor_NullConfiguration_ThrowsArgumentNullException() {
+
+            // Arrange
+
+            var httpClient = new MockHttpMessageHandler().ToHttpClient();
+
+            // Act
+
+            var exception = Record.Exception(
+                () => new GitLabService(httpClient, null)
+            );
+
+            // Assert
+
+            Assert.IsType<ArgumentNullException>(exception);
+        }
+
         [Theory]
         [InlineData(HttpStatusCode.OK)]
         [InlineData(HttpStatusCode.Accepted)]
