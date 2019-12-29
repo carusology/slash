@@ -17,7 +17,7 @@ namespace Slash.Services.GitLab {
 
         /// <summary>
         ///   Asynchronously checks to see if the instance of the GitLab that Slash
-        ///   has been configured to interact with is actually there.
+        ///   has been configured to interact with is actually reachable.
         /// </summary>
         /// <param name="cancellationToken">
         ///   Optional. Pass to provide the ability to cancel the asynchronous request

@@ -31,10 +31,11 @@ namespace Slash.Services.GitLab {
         ///   General information on how this health check was registered.
         /// </param>
         /// <param name="cancellationToken">
-        ///   Enables cancellation of a check to see if GitLab is accessible.
+        ///   Optional. Pass to provide the ability to cancel the asynchronous request
+        ///   after it has been initiated.
         /// </param>
         /// <returns>
-        ///   Whether or not GitLab is accessible in
+        ///   Whether or not GitLab is reachable in
         ///   the form of a <see cref="HealthCheckResult" />.
         /// </returns>
         public async Task<HealthCheckResult> CheckHealthAsync(
